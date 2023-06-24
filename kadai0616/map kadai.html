@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Map&amp;Geolocation</title>
+  <style>
+    body {
+      margin: 20px;
+      padding: 20px;
+      width: 150%;
+      height: 100%;
+      background-color: skyblue;
+    }
+</style>
+</head>
+
+<body>
+
+  <div id="view"></div>
+  <div id="myMap" style="width:50%;height:50%;"></div>
+
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AlFJuT3bcqW3hRoVlI_bopztizjNz08MePFCbpMbFqXjw_qpOskVykizD47xp8f1' async defer></script>
+  <script src="BmapQuery.js"></script>
+  <script>
+    let map;
+
+    function mapsInit(position) {
+      console.log(position, '取得');
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      map = new Bmap("#myMap");
+      map.startMap(lat, lon, "load", 20); //The place is Bellevue.
+      let pin = map.pin(lat, lon, "pink");
+      map.infobox(lat, lon, "おすすめスポット", "私のお気に入りのお店です");
+    };
+
+    function mapsError(error) {
+      let e = "";
+      if (error.code == 1) {
+        e = "位置情報が許可されてません";
+      }
+      if (error.code == 2) {
+        e = "現在位置を特定できません";
+      }
+      if (error.code == 3) {
+        e = "位置情報を取得する前にタイムアウトになりました";
+      }
+      alert("エラー：" + e);
+    };
+
+    const set = {
+      enableHighAccuracy: true,
+      maximumAge: 20000, 
+      timeout: 10000
+    };
+
+    function GetMap() {
+      navigator.geolocation.getCurrentPosition(mapsInit, mapsError, set);
+    }
+  </script>
+</body>
+
+</html>
